@@ -119,7 +119,7 @@ Navigate to the A2 folder:
 cd A2_Task_API_DB
 ```
 
-Create and activate a virtual environment if needed:
+Create and activate a virtual environment if needed.
 
 ### Windows
 
@@ -496,8 +496,9 @@ The project was developed using stage-based Git commits:
 2. `Stage 1: database read endpoints`
 3. `Stage 2: insert into database`
 4. `Stage 3: update and delete with SQL`
+5. `Stage 4: explored SQLite`
 
-Stage 4 contains the manual SQLite exploration and database documentation.
+The commits follow the development stages of the A2 assignment.
 
 ## Conclusion
 
