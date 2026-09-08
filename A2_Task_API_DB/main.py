@@ -123,3 +123,87 @@ def create_task(task: dict):
 
     return dict(row)
 
+@app.put("/tasks/{task_id}", summary="Update a task")
+def update_task(task_id: int, task: dict):
+    if not task:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Request body cannot be empty"}
+        )
+
+    connection = get_db_connection()
+
+    row = connection.execute(
+        "SELECT * FROM tasks WHERE id = ?",
+        (task_id,)
+    ).fetchone()
+
+    if row is None:
+        connection.close()
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Task not found"}
+        )
+
+    if "title" in task:
+        if not isinstance(task["title"], str) or not task["title"].strip():
+            connection.close()
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Title cannot be empty"}
+            )
+
+    if "done" in task:
+        if not isinstance(task["done"], bool):
+            connection.close()
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Done must be a boolean"}
+            )
+
+    if "title" not in task and "done" not in task:
+        connection.close()
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Invalid request body"}
+        )
+
+    title = task.get("title", row["title"])
+    done = task.get("done", bool(row["done"]))
+
+    connection.execute(
+        "UPDATE tasks SET title = ?, done = ? WHERE id = ?",
+        (title, int(done), task_id)
+    )
+
+    connection.commit()
+
+    updated_row = connection.execute(
+        "SELECT * FROM tasks WHERE id = ?",
+        (task_id,)
+    ).fetchone()
+
+    connection.close()
+
+    return dict(updated_row)
+
+
+@app.delete("/tasks/{task_id}", status_code=204, summary="Delete a task")
+def delete_task(task_id: int):
+    connection = get_db_connection()
+
+    cursor = connection.execute(
+        "DELETE FROM tasks WHERE id = ?",
+        (task_id,)
+    )
+
+    connection.commit()
+    connection.close()
+
+    if cursor.rowcount == 0:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Task not found"}
+        )
+
+    return
