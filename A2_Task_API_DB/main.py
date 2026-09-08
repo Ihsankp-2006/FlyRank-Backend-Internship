@@ -92,3 +92,34 @@ def get_task(task_id: int):
         )
 
     return dict(row)
+
+@app.post("/tasks", status_code=201, summary="Create a new task")
+def create_task(task: dict):
+    title = task.get("title")
+
+    if not isinstance(title, str) or not title.strip():
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Title cannot be empty"}
+        )
+
+    connection = get_db_connection()
+
+    cursor = connection.execute(
+        "INSERT INTO tasks (title, done) VALUES (?, ?)",
+        (title, 0)
+    )
+
+    connection.commit()
+
+    task_id = cursor.lastrowid
+
+    row = connection.execute(
+        "SELECT * FROM tasks WHERE id = ?",
+        (task_id,)
+    ).fetchone()
+
+    connection.close()
+
+    return dict(row)
+
