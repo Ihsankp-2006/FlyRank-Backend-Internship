@@ -1,18 +1,19 @@
-# FlyRank Backend Internship — Task API
+# FlyRank Backend Internship — A1 Task API
 
-A simple RESTful Task API built with Python and FastAPI as part of the FlyRank AI Internship Backend Track.
+A simple CRUD REST API built using **Python and FastAPI** as part of the FlyRank Backend Internship.
 
-The API implements full CRUD operations using an in-memory list. No database or external storage is used.
+The project implements an in-memory Task API with validation, proper HTTP status codes, Swagger documentation, and basic error handling.
 
 ## Features
 
-- RESTful API built with FastAPI
+- FastAPI REST API
 - In-memory task storage
 - Create, read, update, and delete tasks
-- Request validation
-- Proper HTTP status codes
+- Input validation
 - JSON error responses
-- Interactive Swagger UI
+- Proper HTTP status codes
+- Interactive Swagger UI documentation
+- Tested using `curl`
 
 ## Requirements
 
@@ -22,79 +23,146 @@ The API implements full CRUD operations using an in-memory list. No database or 
 
 ## Installation
 
-Clone the repository:
+Clone the repository and navigate to the A1 folder:
 
 ```bash
-git clone https://github.com/Ihsankp-2006/FlyRank-Backend-Internship.git
-cd FlyRank-Backend-Internship
+cd A1_Task_API
+```
 
-### Paste **this directly underneath**:
+Create and activate a virtual environment:
 
-```markdown
-Create a virtual environment:
+### Windows
 
-```bash
+```powershell
 python -m venv .venv
-
-Activate the virtual environment on Windows:
-
 .venv\Scripts\activate
+```
 
-Install the required dependencies:
+Install the dependencies:
 
+```bash
 pip install -r requirements.txt
-Run the API
+```
 
-Start the server with:
+## Running the API
 
-python -m uvicorn main:app --reload
+Start the FastAPI server using:
+
+```bash
+uvicorn main:app --reload
+```
 
 The API will be available at:
 
+```text
 http://127.0.0.1:8000
+```
 
-API Endpoints
-Method	Endpoint	Description	Status
-GET	/	Get API information	200
-GET	/health	Check API health	200
-GET	/tasks	Get all tasks	200
-GET	/tasks/{task_id}	Get a task by ID	200
-POST	/tasks	Create a new task	201
-PUT	/tasks/{task_id}	Update a task	200
-DELETE	/tasks/{task_id}	Delete a task	204
-Example Request
+## API Endpoints
 
-Create a new task:
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Get API information |
+| GET | `/health` | Check API health |
+| GET | `/tasks` | Get all tasks |
+| GET | `/tasks/{task_id}` | Get a task by ID |
+| POST | `/tasks` | Create a new task |
+| PUT | `/tasks/{task_id}` | Update a task |
+| DELETE | `/tasks/{task_id}` | Delete a task |
 
+## Example Task
+
+```json
 {
-  "title": "Buy milk"
+    "id": 1,
+    "title": "Learn FastAPI",
+    "done": false
 }
+```
 
-Example response:
+The API starts with three example tasks:
 
+```json
+[
+    {
+        "id": 1,
+        "title": "Learn FastAPI",
+        "done": false
+    },
+    {
+        "id": 2,
+        "title": "Build Task API",
+        "done": false
+    },
+    {
+        "id": 3,
+        "title": "Push project to GitHub",
+        "done": false
+    }
+]
+```
+
+## Error Handling
+
+The API returns appropriate HTTP status codes and JSON error messages.
+
+### Task Not Found
+
+```text
+404 Not Found
+```
+
+```json
 {
-  "id": 4,
-  "title": "Buy milk",
-  "done": false
+    "error": "Task 99 not found"
 }
-Error Handling
+```
 
-The API returns the following status codes:
+### Empty or Missing Title
 
-200 OK — Successful read or update
-201 Created — Task successfully created
-204 No Content — Task successfully deleted
-400 Bad Request — Invalid request body
-404 Not Found — Task ID does not exist
+```text
+400 Bad Request
+```
 
-Example error response:
-
+```json
 {
-  "error": "Task 99 not found"
+    "error": "Title cannot be empty"
 }
-Example curl Output
-$ curl.exe -i http://127.0.0.1:8000/tasks
+```
 
+### Empty Update Request
+
+```text
+400 Bad Request
+```
+
+```json
+{
+    "error": "Request body cannot be empty"
+}
+```
+
+### Invalid `done` Value
+
+The `done` field must be a boolean.
+
+```json
+{
+    "error": "Done must be a boolean"
+}
+```
+
+## Example curl Request
+
+Get all tasks:
+
+```bash
+curl.exe -i http://127.0.0.1:8000/tasks
+```
+
+Example output:
+
+```text
 HTTP/1.1 200 OK
 date: Tue, 08 Sep 2026 18:16:42 GMT
 server: uvicorn
@@ -102,28 +170,75 @@ content-length: 149
 content-type: application/json
 
 [{"id":1,"title":"Learn FastAPI","done":false},{"id":2,"title":"Build Task API","done":false},{"id":3,"title":"Push project to GitHub","done":false}]
-Swagger UI
+```
 
-Interactive API documentation is available at:
+## Swagger UI
 
+FastAPI automatically provides interactive API documentation through Swagger UI.
+
+Open:
+
+```text
 http://127.0.0.1:8000/docs
+```
 
-Project Structure
+The Swagger UI allows the available API endpoints to be viewed and tested directly from the browser.
+
+### Swagger Screenshot
+
+![Swagger UI](swagger.png)
+
+## Project Structure
+
+```text
 FlyRank-Backend-Internship/
+├── A1_Task_API/
+│   ├── main.py
+│   ├── README.md
+│   ├── requirements.txt
+│   └── swagger.png
+│
 ├── .gitignore
-├── main.py
-├── requirements.txt
-├── README.md
-└── swagger.png
-Git Commit History
+└── .venv/          # Local virtual environment, ignored by Git
+```
 
-The project was developed incrementally through meaningful commits:
+## Implementation
 
-chore: initialize repository
-feat: add hello FastAPI server
-feat: add root and health endpoints
-feat: add task read endpoints
-feat: add task creation with validation
-feat: add full task CRUD
-docs: improve Swagger endpoint descriptions
-docs: finalize project documentation
+The API uses an in-memory Python list to store tasks.
+
+Each task contains:
+
+- `id` — Unique task ID
+- `title` — Task title
+- `done` — Completion status
+
+Because the data is stored in memory, tasks are reset whenever the application is restarted.
+
+## HTTP Status Codes
+
+| Status Code | Usage |
+|---|---|
+| `200 OK` | Successful GET/PUT request |
+| `201 Created` | Task successfully created |
+| `204 No Content` | Task successfully deleted |
+| `400 Bad Request` | Invalid request data |
+| `404 Not Found` | Requested task does not exist |
+
+## Git Commit History
+
+The project was developed using meaningful Git commits:
+
+1. `chore: initialize repository`
+2. `feat: add hello FastAPI server`
+3. `feat: add root and health endpoints`
+4. `feat: add task read endpoints`
+5. `feat: add task creation with validation`
+6. `feat: add full task CRUD`
+7. `docs: improve Swagger endpoint descriptions`
+8. `docs: finalize project documentation`
+9. `chore: organize A1 into assignment folder`
+10. `docs: update A1 project structure`
+
+## Conclusion
+
+This project demonstrates the implementation of a basic CRUD REST API using FastAPI, including routing, request handling, validation, error handling, HTTP status codes, Swagger documentation, and Git-based project management.
