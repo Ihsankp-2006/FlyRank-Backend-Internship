@@ -6,6 +6,9 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set")
+
 
 def get_connection():
     return psycopg.connect(DATABASE_URL)
@@ -61,6 +64,7 @@ def get_task(task_id):
                 "SELECT * FROM tasks WHERE id = %s",
                 (task_id,)
             )
+
             row = cursor.fetchone()
 
             if row is None:
@@ -71,4 +75,72 @@ def get_task(task_id):
                 "title": row[1],
                 "done": row[2]
             }
-        
+
+
+def create_task(title):
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO tasks (title, done)
+                VALUES (%s, %s)
+                RETURNING *
+                """,
+                (title, False)
+            )
+
+            row = cursor.fetchone()
+
+        connection.commit()
+
+        return {
+            "id": row[0],
+            "title": row[1],
+            "done": row[2]
+        }
+
+
+def update_task(task_id, title, done):
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE tasks
+                SET title = %s, done = %s
+                WHERE id = %s
+                """,
+                (title, done, task_id)
+            )
+
+            if cursor.rowcount == 0:
+                return None
+
+            cursor.execute(
+                "SELECT * FROM tasks WHERE id = %s",
+                (task_id,)
+            )
+
+            row = cursor.fetchone()
+
+        connection.commit()
+
+        return {
+            "id": row[0],
+            "title": row[1],
+            "done": row[2]
+        }
+
+
+def delete_task(task_id):
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM tasks WHERE id = %s",
+                (task_id,)
+            )
+
+            deleted = cursor.rowcount > 0
+
+        connection.commit()
+
+        return deleted
