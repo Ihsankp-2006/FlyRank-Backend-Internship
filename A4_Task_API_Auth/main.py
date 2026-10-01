@@ -1,6 +1,6 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -51,7 +51,6 @@ def signup(data: dict):
             status_code=400,
             content={"error": str(e)}
         )
-        
 
 
 @app.post("/auth/login")
@@ -81,3 +80,32 @@ def login(data: dict):
             status_code=401,
             content={"error": "Invalid login credentials"}
         )
+
+
+@app.get("/public/info")
+def public_info():
+    return {
+        "message": "This is a public endpoint"
+    }
+
+
+@app.get("/protected/profile")
+def protected_profile(authorization: str | None = Header(default=None)):
+    if not authorization or not authorization.startswith("Bearer "):
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Access token required"}
+        )
+
+    token = authorization.split(" ", 1)[1]
+
+    if not token:
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Access token required"}
+        )
+
+    return {
+        "message": "Protected endpoint",
+        "token_received": True
+    }
