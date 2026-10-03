@@ -1,6 +1,8 @@
 import os
 
-from fastapi import FastAPI, Header, Depends
+from fastapi import FastAPI, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -14,6 +16,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = FastAPI()
 
+security = HTTPBearer()
 
 @app.get("/")
 def root():
@@ -89,23 +92,22 @@ def public_info():
     }
 
 
-def require_user(authorization: str | None = Header(default=None)):
-    if not authorization or not authorization.startswith("Bearer "):
-        raise Exception("Access token required")
-
-    token = authorization.split(" ", 1)[1]
-
-    if not token:
-        raise Exception("Access token required")
+def require_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+):
+    token = credentials.credentials
 
     try:
         response = supabase.auth.get_user(token)
         return response.user
 
     except Exception:
-        raise Exception("Invalid or expired token")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token"
+        )
 
-
+   
 @app.get("/protected/profile")
 def protected_profile(user=Depends(require_user)):
     return {
