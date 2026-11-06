@@ -1,0 +1,56 @@
+{
+  "prompt_version": "support_ticket_v1",
+  "total_cases": 8,
+  "correct": 8,
+  "accuracy_percent": 100.0,
+  "results": [
+    {
+      "case": 1,
+      "expected": "billing",
+      "predicted": "billing",
+      "passed": true
+    },
+    {
+      "case": 2,
+      "expected": "billing",
+      "predicted": "billing",
+      "passed": true
+    },
+    {
+      "case": 3,
+      "expected": "technical",
+      "predicted": "technical",
+      "passed": true
+    },
+    {
+      "case": 4,
+      "expected": "technical",
+      "predicted": "technical",
+      "passed": true
+    },
+    {
+      "case": 5,
+      "expected": "account",
+      "predicted": "account",
+      "passed": true
+    },
+    {
+      "case": 6,
+      "expected": "account",
+      "predicted": "account",
+      "passed": true
+    },
+    {
+      "case": 7,
+      "expected": "general",
+      "predicted": "general",
+      "passed": true
+    },
+    {
+      "case": 8,
+      "expected": "general",
+      "predicted": "general",
+      "passed": true
+    }
+  ]
+}

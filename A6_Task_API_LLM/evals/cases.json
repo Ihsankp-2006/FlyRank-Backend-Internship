@@ -1,0 +1,34 @@
+[
+  {
+    "message": "I was charged twice for my monthly subscription.",
+    "expected_category": "billing"
+  },
+  {
+    "message": "My invoice contains an incorrect amount.",
+    "expected_category": "billing"
+  },
+  {
+    "message": "The application crashes whenever I upload a file.",
+    "expected_category": "technical"
+  },
+  {
+    "message": "The website is down and none of our users can access it.",
+    "expected_category": "technical"
+  },
+  {
+    "message": "I cannot log in after resetting my password.",
+    "expected_category": "account"
+  },
+  {
+    "message": "Please help me change the email address linked to my account.",
+    "expected_category": "account"
+  },
+  {
+    "message": "Where can I find information about your company's services?",
+    "expected_category": "general"
+  },
+  {
+    "message": "I would like to know your customer support working hours.",
+    "expected_category": "general"
+  }
+]
