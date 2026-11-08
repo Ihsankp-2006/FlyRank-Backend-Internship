@@ -1,6 +1,6 @@
 # FlyRank AI Internship – Backend Engineering
 
-A collection of assignments, implementations, and projects completed as part of the **FlyRank AI Internship Program**.
+A collection of assignments, as part of the **FlyRank AI Internship Program**.
 
 This repository documents my learning and practical work in backend development, API engineering, database integration, authentication, and AI/LLM integration.
 
@@ -10,7 +10,6 @@ This repository documents my learning and practical work in backend development,
 **Program:** FlyRank AI Internship Program  
 **Role:** Back-End AI Engineering Intern  
 **Focus:** Backend Development and AI Engineering  
-**Status:** Finished
 
 Throughout this internship, I work on practical assignments designed to strengthen my understanding of backend systems, API development, database management, authentication, and integrating AI capabilities into applications.
 
